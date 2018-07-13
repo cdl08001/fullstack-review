@@ -1,13 +1,26 @@
 const express = require('express');
 let app = express();
-var bodyParser = require('body-parser');
+let bodyParser = require('body-parser');
+let getReposByUsername = require('../helpers/github.js');
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.json());
 
 app.post('/repos', function (req, res) {
-  console.log(req.body)
-  res.end();
+  // Get the incoming search query
+  let searchQuery = req.body.searchTerm;
+  // Check to see if the search query is empty. If so, return 400 to client.
+  if (searchQuery === '') {
+    res.status(400).send('You need to enter a search term')
+  } else {
+    // Otherwise, pass the query into the our helper function.
+    // If an error is returned, throw it, otherwise, send 200 along with
+    // data.
+    getReposByUsername(searchQuery, (err, data) => {
+      if (err) throw err;
+      res.status(200).send('Search Complete');
+    });
+  }
 });
 
 app.get('/repos', function (req, res) {

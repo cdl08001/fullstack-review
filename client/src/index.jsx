@@ -23,6 +23,13 @@ class App extends React.Component {
       data: JSON.stringify(test),
       statusCode: {
         200: console.log(`${term} was searched`)
+      },
+      complete: function(data){
+        if(data.status === 200){
+          console.log('The post request to the server was successful');
+        } else {
+          console.log('There was a problem posting data to the server. Check to make sure a name was entered.')
+        }
       }
     })
   }
