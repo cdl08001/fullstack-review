@@ -1,17 +1,16 @@
 import React from 'react';
 
 let RepoListItem = (props) => {
+
   let repo = props.repo;
   return (
-    <div>
-      User: {repo.user}<br></br>
-      User URL: {repo.userUrl}<br></br>
-      Repo Name: {repo.repoName}<br></br>
-      Repo Description: {repo.repoDescription}<br></br>
-      Repo URL: {repo.repoUrl}<br></br>
-      <br></br>
-    </div>
-
+    <ul style={{ listStyleType: "none" }}>
+      <li>Repo Name: <a href={repo.repoUrl}>{repo.repoName}</a></li>
+      <li>Repo Description: {repo.repoDescription}</li>
+      <li>Repo URL: {repo.repoUrl}</li>
+      <li>User: {repo.user}</li>
+      <li>User URL: {repo.userUrl}</li>
+    </ul>
   )
 }
 
