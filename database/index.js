@@ -5,6 +5,7 @@ let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 
 db.once('open', function() {
+
   console.log('We are connected!'); 
 
   let repoSchema = new mongoose.Schema({
@@ -18,6 +19,7 @@ db.once('open', function() {
 
   let Repo = mongoose.model('Repo', repoSchema);
 
+  // Check to see if duplicate entry exists. If so, do nothing. Otherwise, proceed with save. 
   let findDupe = (resultObject, callback) => {
     let targetID = resultObject.id;
     Repo.find({id: resultObject.id}, (err, docs) => {
@@ -49,28 +51,18 @@ db.once('open', function() {
   module.exports.findDupe = findDupe;
 
   // Dummy data: 
-  let test = { 
-      id: 36949278, 
-      user: 'frothga',
-      userUrl: 'https://github.com/frothga',
-      repoName: 'n2a',
-      repoDescription: 'An object-oriented language for modeling large-scale neural systems, along with an IDE for writing and simulating models.',
-      repoUrl: 'https://github.com/frothga/n2a' 
-  };
-
-  // // Test save
-  // save(test, (error, success) => {
-  //   if(error){
-  //     console.log(error)
-  //   } else {
-  //     console.log(success)
-  //   }
-  // });
-
+  // let test = { 
+  //     id: 36949278, 
+  //     user: 'frothga',
+  //     userUrl: 'https://github.com/frothga',
+  //     repoName: 'n2a',
+  //     repoDescription: 'An object-oriented language for modeling large-scale neural systems, along with an IDE for writing and simulating models.',
+  //     repoUrl: 'https://github.com/frothga/n2a' 
+  // };
   // Test Find Dupe:
-  findDupe(test, (err, success) => {
-    if (err) throw err;
-    console.log(success)
-  });
+  // findDupe(test, (err, success) => {
+  //   if (err) throw err;
+  //   console.log(success)
+  // });
 
 });

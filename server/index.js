@@ -2,12 +2,14 @@ const express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
 let getReposByUsername = require('../helpers/github.js');
-let save = require('../database/index.js');
+let findDupe = require('../database/index.js');
+
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.json());
 
 app.post('/repos', function (req, res) {
+  console.log('The find dupe function is: ', findDupe)
   // Get the incoming search query
   let searchQuery = req.body.searchTerm;
   // Check to see if the search query is empty. If so, return 400 to client.
@@ -15,15 +17,16 @@ app.post('/repos', function (req, res) {
     res.status(400).send('You need to enter a search term')
   } else {
     // Otherwise, pass the query into the our helper function.
-    // If an error is returned, throw it, otherwise, attempt to save the data to the database:
     getReposByUsername(searchQuery, (err, data) => {
       if (err) throw err;
-
-
-// We need to create models for each one of our API query responses and 
-// call the 'save' function for each in order to save them to the db:
-
-
+      // Call 'findDupe' for each object within the data array in an attempt to 
+      // save them to the database:
+      data.forEach((item) => {
+        findDupe.findDupe(item, (err, success) => {
+          if (err) throw err;
+          console.log(success)
+        });
+      })
 
       res.status(200).send('Search Complete');
     });
