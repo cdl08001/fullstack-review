@@ -53,7 +53,7 @@ db.once('open', function() {
   };
 
   let get25 = (cb) => {
-    Repo.find({}, null, {limit:25}, (err, data) => {
+    Repo.find({}, null, {sort: {repoForks: -1},limit:25}, (err, data) => {
       if (err) throw err;
       cb(data);
     })
