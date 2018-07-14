@@ -8,19 +8,18 @@ let dbMethods = require('../database/index.js');
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.json());
 
+// All post request should trigger a query to Github API via 'getReposByUserName':
 app.post('/repos', function (req, res) {
-  // Get the incoming search query
   let searchQuery = req.body.searchTerm;
-  // Check to see if the search query is empty. If so, return 400 to client.
   if (searchQuery === '') {
     res.status(400).send('You need to enter a search term')
   } else {
-    // Otherwise, pass the query into the our helper function.
     getReposByUsername(searchQuery, (err, data) => {
       if (err) {
         res.status(400).send('Sorry, no repos found with that username')
       }
-      // Call 'findDupe' for each object within the data array in an attempt to save them to the database:
+      // If we get back data dfrom the API, we need to kickoff the dupe check + saving process by calling dbMethods.findDupe
+      // This will trigger a save for each item if dupes are not found:
       data.forEach((item) => {
         dbMethods.findDupe(item, (err, success) => {
           if (err) throw err;

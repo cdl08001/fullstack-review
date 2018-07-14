@@ -28,14 +28,13 @@ db.once('open', function() {
       if (docs.length > 0) {
         console.log('A duplicate exists for model: ', resultObject.id)
       } else {
+        console.log('No duplicate records exist for model: ', resultObject.id);
         save(resultObject, callback);
       };
     });
   };
 
   let save = (resultObject, cb) => {
-
-      console.log('No duplicate records exist for model: ', resultObject.id);
       let newModel = new Repo({
         id: resultObject.id,
         user: resultObject.user,
@@ -45,13 +44,13 @@ db.once('open', function() {
         repoUrl: resultObject.repoUrl,
         repoForks: resultObject.forks
       });
-      console.log('The current Model is: ', newModel)
       newModel.save((err, resultObject) => {
         if (err) throw err;
         cb(null, `SUCCESS: Model ${resultObject.id} added!`)
       });
   };
-
+  
+  // Get top 25 repos after sorting by fork count:
   let get25 = (cb) => {
     Repo.find({}, null, {sort: {repoForks: -1},limit:25}, (err, data) => {
       if (err) throw err;
@@ -61,20 +60,4 @@ db.once('open', function() {
 
   module.exports.findDupe = findDupe;
   module.exports.get25 = get25;
-
-  // Dummy data: 
-  // let test = { 
-  //     id: 36949278, 
-  //     user: 'frothga',
-  //     userUrl: 'https://github.com/frothga',
-  //     repoName: 'n2a',
-  //     repoDescription: 'An object-oriented language for modeling large-scale neural systems, along with an IDE for writing and simulating models.',
-  //     repoUrl: 'https://github.com/frothga/n2a' 
-  // };
-  // Test Find Dupe:
-  // findDupe(test, (err, success) => {
-  //   if (err) throw err;
-  //   console.log(success)
-  // });
-
 });
