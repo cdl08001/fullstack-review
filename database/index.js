@@ -48,7 +48,15 @@ db.once('open', function() {
       });
   };
 
+  let get25 = (cb) => {
+    Repo.find({}, null, {limit:25}, (err, data) => {
+      if (err) throw err;
+      cb(data);
+    })
+  }
+
   module.exports.findDupe = findDupe;
+  module.exports.get25 = get25;
 
   // Dummy data: 
   // let test = { 
