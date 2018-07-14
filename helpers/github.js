@@ -18,17 +18,22 @@ let getReposByUsername = (userName, callback) => {
   let convertData = (resultsObject) => {
     let itemList = resultsObject["items"];
     let filteredItems = [];
-    itemList.forEach((item) => {
-      let filteredItem = {};
-      filteredItem.id = item.id; 
-      filteredItem.user = item.owner.login;
-      filteredItem.userUrl = item.owner.html_url;
-      filteredItem.repoName = item.name;
-      filteredItem.repoDescription = item.description;
-      filteredItem.repoUrl = item.html_url;
-      filteredItems.push(filteredItem);
-    })
-    return filteredItems;
+    if(itemList === undefined){
+      callback('No Results Found.')
+    } else {
+      itemList.forEach((item) => {
+        let filteredItem = {};
+        filteredItem.id = item.id; 
+        filteredItem.user = item.owner.login;
+        filteredItem.userUrl = item.owner.html_url;
+        filteredItem.repoName = item.name;
+        filteredItem.repoDescription = item.description;
+        filteredItem.repoUrl = item.html_url;
+        filteredItem.forks = item.forks_count;
+        filteredItems.push(filteredItem);
+      })     
+      return filteredItems; 
+    }
   }
 
   request(options, function(error, response, body) {

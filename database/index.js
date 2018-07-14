@@ -14,7 +14,8 @@ db.once('open', function() {
     userUrl: String,
     repoName: String,
     repoDescription: String,
-    repoUrl: String
+    repoUrl: String,
+    repoForks: Number
   });
 
   let Repo = mongoose.model('Repo', repoSchema);
@@ -33,6 +34,7 @@ db.once('open', function() {
   };
 
   let save = (resultObject, cb) => {
+
       console.log('No duplicate records exist for model: ', resultObject.id);
       let newModel = new Repo({
         id: resultObject.id,
@@ -41,7 +43,9 @@ db.once('open', function() {
         repoName: resultObject.repoName,
         repoDescription: resultObject.repoDescription,
         repoUrl: resultObject.repoUrl,
+        repoForks: resultObject.forks
       });
+      console.log('The current Model is: ', newModel)
       newModel.save((err, resultObject) => {
         if (err) throw err;
         cb(null, `SUCCESS: Model ${resultObject.id} added!`)

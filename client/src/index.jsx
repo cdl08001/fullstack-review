@@ -39,8 +39,10 @@ class App extends React.Component {
       complete: function(data){
         if(data.status === 200){
           console.log('The post request to the server was successful');
-        } else {
+        } else if(term === '') {
           console.log('There was a problem posting data to the server. Check to make sure a name was entered.')
+        } else {
+          console.log('No repos were found under that handle.')
         }
       }
     })

@@ -17,16 +17,16 @@ app.post('/repos', function (req, res) {
   } else {
     // Otherwise, pass the query into the our helper function.
     getReposByUsername(searchQuery, (err, data) => {
-      if (err) throw err;
-      // Call 'findDupe' for each object within the data array in an attempt to 
-      // save them to the database:
+      if (err) {
+        res.status(400).send('Sorry, no repos found with that username')
+      }
+      // Call 'findDupe' for each object within the data array in an attempt to save them to the database:
       data.forEach((item) => {
         dbMethods.findDupe(item, (err, success) => {
           if (err) throw err;
           console.log(success)
         });
       })
-
       res.status(200).send('Search Complete');
     });
   }
@@ -35,7 +35,6 @@ app.post('/repos', function (req, res) {
 app.get('/repos', function (req, res) {
   // 'TOP 25' = First 25:
   dbMethods.get25((data) => {
-    console.log('The data from GET25 is (should be 1): ', data);
     res.status(200).send(data);
   });
 });
