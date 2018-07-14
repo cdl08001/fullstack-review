@@ -36,7 +36,7 @@ app.get('/repos', function (req, res) {
   // 'TOP 25' = First 25:
   dbMethods.get25((data) => {
     console.log('The data from GET25 is (should be 1): ', data);
-    res.end()
+    res.status(200).send(data);
   });
 });
 
