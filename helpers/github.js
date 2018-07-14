@@ -15,7 +15,6 @@ let getReposByUsername = (userName, callback) => {
   };
 
   // We need a helper function to filter the data we recieve from the API:
-
   let convertData = (resultsObject) => {
     let itemList = resultsObject["items"];
     let filteredItems = [];
@@ -34,7 +33,7 @@ let getReposByUsername = (userName, callback) => {
 
   request(options, function(error, response, body) {
     if(error) throw error;
-    convertData(JSON.parse(body));
+    callback(null, convertData(JSON.parse(body)));
   })
 
 }

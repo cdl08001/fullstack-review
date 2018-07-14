@@ -2,6 +2,7 @@ const express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
 let getReposByUsername = require('../helpers/github.js');
+let save = require('../database/index.js');
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.json());
@@ -14,10 +15,16 @@ app.post('/repos', function (req, res) {
     res.status(400).send('You need to enter a search term')
   } else {
     // Otherwise, pass the query into the our helper function.
-    // If an error is returned, throw it, otherwise, send 200 along with
-    // data.
+    // If an error is returned, throw it, otherwise, attempt to save the data to the database:
     getReposByUsername(searchQuery, (err, data) => {
       if (err) throw err;
+
+
+// We need to create models for each one of our API query responses and 
+// call the 'save' function for each in order to save them to the db:
+
+
+
       res.status(200).send('Search Complete');
     });
   }
