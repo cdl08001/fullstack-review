@@ -11,7 +11,7 @@ class App extends React.Component {
       repos: [],
       searchCache: {}
     }
-
+  this.success = this.success.bind(this);
   }
 
   componentDidMount() {
@@ -26,12 +26,11 @@ class App extends React.Component {
     });
   }
 
-  success(){
-    console.log('SUCCESS!');
-  }
-
-  failure(){
-    console.log('Failure')
+  success(data) {
+    let newRepos = JSON.parse(data.responseText);
+    this.setState({
+      repos: newRepos
+    })
   }
 
   search (term) {
@@ -43,8 +42,10 @@ class App extends React.Component {
       method: 'POST',
       data: JSON.stringify(test),
       statusCode: {
-        200: this.success,
-        400: this.failure
+        200:  this.success,
+        400:  function(data) {
+                console.log('Failure')
+              }
       }
     })
   }
@@ -59,13 +60,3 @@ class App extends React.Component {
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
-
-/*
-        if(status === 200){
-          console.log('The post request to the server was successful');
-        } else if(term === '') {
-          console.log('There was a problem posting data to the server. Check to make sure a name was entered.')
-        } else {
-          console.log('No repos were found under that handle.')
-        }
-*/

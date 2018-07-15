@@ -42,7 +42,6 @@ db.once('open', function() {
   };
 
   let save = (resultObject, cb) => {
-    console.log(resultObject)
       let newModel = new Repo({
         id: resultObject.id,
         user: resultObject.user,

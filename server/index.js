@@ -21,8 +21,13 @@ app.post('/repos', function (req, res) {
       // If we get back data dfrom the API, we need to kickoff the dupe check + saving process by calling dbMethods.findDupe
       // This will trigger a save for each item if dupes are not found:
       dbMethods.findDupe(data, (err, success) => {
+        console.log('error is ', err)
         if(err) {
-          res.status(200).send(null);
+          console.log('This should be getting sent')
+          res.status(200).send(data);
+        } else {
+          console.log('No error?')
+          res.status(200).send(data);
         }
       })
     });
