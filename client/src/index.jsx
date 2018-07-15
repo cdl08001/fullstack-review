@@ -8,7 +8,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      repos: []
+      repos: [],
+      searchCache: {}
     }
 
   }
@@ -25,6 +26,14 @@ class App extends React.Component {
     });
   }
 
+  success(){
+    console.log('SUCCESS!');
+  }
+
+  failure(){
+    console.log('Failure')
+  }
+
   search (term) {
     let test = {searchTerm: term};
     $.ajax({
@@ -34,20 +43,12 @@ class App extends React.Component {
       method: 'POST',
       data: JSON.stringify(test),
       statusCode: {
-        200: console.log(`${term} was searched`)
-      },
-      complete: function(data){
-        if(data.status === 200){
-          console.log('The post request to the server was successful');
-        } else if(term === '') {
-          console.log('There was a problem posting data to the server. Check to make sure a name was entered.')
-        } else {
-          console.log('No repos were found under that handle.')
-        }
+        200: this.success,
+        400: this.failure
       }
     })
   }
-
+ 
   render () {
     return (<div>
       <h1>Github Fetcher</h1>
@@ -58,3 +59,13 @@ class App extends React.Component {
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
+
+/*
+        if(status === 200){
+          console.log('The post request to the server was successful');
+        } else if(term === '') {
+          console.log('There was a problem posting data to the server. Check to make sure a name was entered.')
+        } else {
+          console.log('No repos were found under that handle.')
+        }
+*/

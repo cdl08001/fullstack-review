@@ -22,19 +22,27 @@ db.once('open', function() {
 
   // Check to see if duplicate entry exists. If so, do nothing. Otherwise, proceed with save. 
   let findDupe = (resultObject, callback) => {
-    let targetID = resultObject.id;
-    Repo.find({id: resultObject.id}, (err, docs) => {
-      if (err) throw err;
-      if (docs.length > 0) {
-        console.log('A duplicate exists for model: ', resultObject.id)
-      } else {
-        console.log('No duplicate records exist for model: ', resultObject.id);
-        save(resultObject, callback);
-      };
-    });
+    let numRepos = resultObject.length;
+    let duplicates = 0;
+    
+    resultObject.forEach((item) => {
+      let targetID = item.id;
+      Repo.find({id: targetID}, (err, docs) => {
+        if (docs.length > 0) {
+          duplicates = duplicates + 1;
+        } else {
+          save(item, callback);
+        }
+        if (numRepos === duplicates) {
+          console.log('No new database records were created');
+          callback(true);
+        }
+      })
+    })
   };
 
   let save = (resultObject, cb) => {
+    console.log(resultObject)
       let newModel = new Repo({
         id: resultObject.id,
         user: resultObject.user,
@@ -44,6 +52,7 @@ db.once('open', function() {
         repoUrl: resultObject.repoUrl,
         repoForks: resultObject.forks
       });
+      console.log('The current Model is: ', newModel)
       newModel.save((err, resultObject) => {
         if (err) throw err;
         cb(null, `SUCCESS: Model ${resultObject.id} added!`)

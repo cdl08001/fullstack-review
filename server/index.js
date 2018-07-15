@@ -20,19 +20,17 @@ app.post('/repos', function (req, res) {
       }
       // If we get back data dfrom the API, we need to kickoff the dupe check + saving process by calling dbMethods.findDupe
       // This will trigger a save for each item if dupes are not found:
-      data.forEach((item) => {
-        dbMethods.findDupe(item, (err, success) => {
-          if (err) throw err;
-          console.log(success)
-        });
+      dbMethods.findDupe(data, (err, success) => {
+        if(err) {
+          res.status(200).send(null);
+        }
       })
-      res.status(200).send('Search Complete');
     });
   }
 });
 
 app.get('/repos', function (req, res) {
-  // 'TOP 25' = First 25:
+  // 'TOP 25' = Most forked
   dbMethods.get25((data) => {
     res.status(200).send(data);
   });
